@@ -1,4 +1,4 @@
-TimePickerExtended
+Windows Forms TimePicker
 ==================
 
 Windows Forms TimePicker.
