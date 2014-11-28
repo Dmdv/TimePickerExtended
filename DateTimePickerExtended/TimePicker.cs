@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace DateTimePickerExtended
@@ -10,45 +8,18 @@ namespace DateTimePickerExtended
 	/// <summary>
 	/// Timepicker supports for Null Values and supports clear with Del or Backspace buttons.
 	/// </summary>
-	public class TimePicker : DateTimePicker
+	public partial class TimePicker : DateTimePicker
 	{
-		private const string Null = @" ";
+		private const string NullFormat = @" ";
 
 		public TimePicker()
 		{
+			InitializeComponent();
+
 			Format = DateTimePickerFormat.Custom;
 			ShowUpDown = true;
-			Clear();
-		}
 
-		/// <summary>
-		/// Modified CustomFormat Property stores the assigned CustomFormat when null, 
-		/// otherwise functions as normal
-		/// </summary>
-		public new string CustomFormat
-		{
-			get { return _customFormat; }
-			set
-			{
-				_customFormat = value;
-				SetCustomFormat();
-			}
-		}
-
-		/// <summary>
-		/// Modified Format Property stores the assigned Format and the propagates the change to base.CustomFormat
-		/// </summary>
-		[Browsable(true)]
-		[DefaultValue(DateTimePickerFormat.Long), TypeConverter(typeof (Enum))]
-		public new DateTimePickerFormat Format
-		{
-			get { return _format; }
-			set
-			{
-				_format = value;
-				base.Format = value;
-				SetCustomFormat();
-			}
+			SetTime24Format();
 		}
 
 		public new object Value
@@ -58,43 +29,39 @@ namespace DateTimePickerExtended
 			{
 				if (value == null || value == DBNull.Value)
 				{
-					if (!_isNull)
+					if (_isNull)
 					{
-						_isNull = true;
-						OnValueChanged(EventArgs.Empty);
+						return;
 					}
+
+					_isNull = true;
+					OnValueChanged(EventArgs.Empty);
 				}
 				else
 				{
-					var dateTime = (DateTime) value;
+					var newValue = (DateTime) value;
 
-					if (_isNull && DateTime.Equals(base.Value, dateTime))
+					SetTime24Format();
+
+					if (_isNull && DateTime.Equals(base.Value, newValue))
 					{
-						_isNull = false;
 						OnValueChanged(EventArgs.Empty);
 					}
 					else
 					{
-						_isNull = false;
-						base.Value = dateTime;
+						base.Value = newValue;
 					}
-				}
 
-				SetCustomFormat();
+					_isNull = false;
+				}
 			}
 		}
 
 		public void Clear()
 		{
-			CustomFormat = Null;
+			CustomFormat = NullFormat;
 			Text = string.Empty;
 			Value = null;
-		}
-
-		public void SetTime12Format()
-		{
-			_isNull = false;
-			CustomFormat = @"hh:mm";
 		}
 
 		public void SetTime24Format()
@@ -156,59 +123,24 @@ namespace DateTimePickerExtended
 
 					if (nmupdown.Delta != 0)
 					{
-						SetTime24Format();
 						Value = base.Value;
 					}
 				}
 
 				if (nmhdr.Code == -746)
 				{
-					SetTime24Format();
 					Value = base.Value;
 				}
 			}
 			base.WndProc(ref m);
 		}
 
-		private void SetCustomFormat()
-		{
-			base.CustomFormat = null;
-
-			if (_isNull)
-			{
-				base.CustomFormat = Null;
-				_customFormat = Null;
-			}
-			else
-			{
-				//The Following is used to get a string representation ot the current UDTP Format
-				//And then set the CustomFormat to match the intended format
-				var cultureInfo = Thread.CurrentThread.CurrentCulture;
-				var dTFormatInfo = cultureInfo.DateTimeFormat;
-				switch (_format)
-				{
-					case DateTimePickerFormat.Long:
-						base.CustomFormat = dTFormatInfo.LongDatePattern;
-						break;
-					case DateTimePickerFormat.Short:
-						base.CustomFormat = dTFormatInfo.ShortDatePattern;
-						break;
-					case DateTimePickerFormat.Time:
-						base.CustomFormat = dTFormatInfo.ShortTimePattern;
-						break;
-					case DateTimePickerFormat.Custom:
-						base.CustomFormat = _customFormat;
-						break;
-				}
-			}
-		}
-
 		// ReSharper disable UnusedMember.Local
 		// ReSharper disable MemberCanBePrivate.Local
 		// ReSharper disable InconsistentNaming
 
-		private string _customFormat;
-		private DateTimePickerFormat _format;
+		//private string _customFormat;
+		//private DateTimePickerFormat _format;
 		private bool _isNull;
 
 		[StructLayout(LayoutKind.Sequential)]

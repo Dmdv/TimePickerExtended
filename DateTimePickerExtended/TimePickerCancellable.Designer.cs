@@ -36,7 +36,7 @@
 			// 
 			this._clearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._clearButton.Image = global::DateTimePickerExtended.Properties.Resources._1416844396_DeleteRed;
-			this._clearButton.Location = new System.Drawing.Point(254, -1);
+			this._clearButton.Location = new System.Drawing.Point(252, -1);
 			this._clearButton.Margin = new System.Windows.Forms.Padding(0);
 			this._clearButton.Name = "_clearButton";
 			this._clearButton.Size = new System.Drawing.Size(22, 22);
@@ -51,13 +51,13 @@
 			this._timePicker.Checked = false;
 			this._timePicker.CustomFormat = " ";
 			this._timePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-			this._timePicker.Location = new System.Drawing.Point(3, 0);
+			this._timePicker.Location = new System.Drawing.Point(0, 0);
 			this._timePicker.Margin = new System.Windows.Forms.Padding(0);
 			this._timePicker.Name = "_timePicker";
 			this._timePicker.ShowUpDown = true;
 			this._timePicker.Size = new System.Drawing.Size(251, 20);
 			this._timePicker.TabIndex = 2;
-			this._timePicker.Value = null;
+			this._timePicker.Value = new System.DateTime(2014, 11, 27, 22, 0, 12, 248);
 			// 
 			// TimePickerCancellable
 			// 

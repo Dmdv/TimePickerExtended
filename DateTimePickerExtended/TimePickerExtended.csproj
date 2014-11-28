@@ -56,6 +56,9 @@
     <Compile Include="TimePicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TimePicker.Designer.cs">
+      <DependentUpon>TimePicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="UltraDateTimePickerWithTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
